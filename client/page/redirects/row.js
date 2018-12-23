@@ -144,16 +144,29 @@ class RedirectRow extends React.Component {
 	getName( url, title ) {
 		const { regex, match_type } = this.props.item;
 
+		// orig shows only title, not the url (if title exists)
+		/**
 		if ( title ) {
 			return title;
 		}
+		**/
 
 		const fullUrl = this.getUrl( url, match_type );
-		if ( regex ) {
-			return fullUrl;
+
+		const matchedUrl = regex
+			? fullUrl
+			: <ExternalLink url={ this.getServerUrl( url, match_type ) }>{ fullUrl }</ExternalLink>;
+
+		// same as before: show just url (when title does not exist)
+		if (! title ) {
+			return matchedUrl
 		}
 
-		return <ExternalLink url={ this.getServerUrl( url, match_type ) }>{ fullUrl }</ExternalLink>;
+		// show both url and title (when title exists)
+		return (
+			  { matchedUrl } <br />
+			  { title }
+		)
 	}
 
 	renderSource( url, title, saving ) {
